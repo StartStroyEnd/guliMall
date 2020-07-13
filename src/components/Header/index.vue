@@ -87,6 +87,7 @@ export default {
           // keyword_p: "" || undefined,
           keyword_p: this.keyword_in || undefined,
         },
+        // }).catch(() => {});
       });
     },
   },

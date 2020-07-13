@@ -10,10 +10,17 @@ export default [
   {
     path: "/login",
     component: Login,
+    // 用来判定底部是否隐藏  （meta圆数据）
+    meta: {
+      isHide: true,
+    },
   },
   {
     path: "/register",
     component: Register,
+    meta: {
+      isHide: true,
+    },
   },
   {
     path: "/search/:keyword_in?",
