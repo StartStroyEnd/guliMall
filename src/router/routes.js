@@ -27,14 +27,15 @@ export default [
     component: Search,
     name: "search",
     // route为当前路由对象
-    props: (route) => ({
-      // 对应写法    1
-      // keyword_q: route.query.keyword_out,
-      // keyword_p: route.params.keyword_in,
-      // 对应写法    2
-      keyword_q: route.query.keyword_q,
-      keyword_p: route.params.keyword_p,
-    }),
+    // 测试search是否有接受到参数。
+    // props: (route) => ({
+    //   // 对应写法    1
+    //   // keyword_q: route.query.keyword_out,
+    //   // keyword_p: route.params.keyword_in,
+    //   // 对应写法    2
+    //   keyword_q: route.query.keyword_q,
+    //   keyword_p: route.params.keyword_p,
+    // }),
   },
   {
     path: "/",

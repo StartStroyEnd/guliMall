@@ -24,6 +24,16 @@ export default {
   // mounted() {
   //   reqCategoryList();
   // },
+  mounted() {
+    //   对接actions
+    // actions对接组件对象的操作
+    this.getCategoryList();
+  },
+  methods: {
+    getCategoryList() {
+      this.$store.dispatch("getCategoryList");
+    },
+  },
 };
 </script>
 

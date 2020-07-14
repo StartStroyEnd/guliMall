@@ -1,12 +1,14 @@
 <template>
   <div>
-    Search
-    <br />
+    <!-- Search -->
+    <!-- <br /> -->
     <!-- params参数 ： {{ $route.params.keyword_p }} -->
-    params参数 ： {{ keyword_p }}
-    <br />
+    <!-- params参数 ： {{ keyword_p }} -->
+    <!-- <br /> -->
     <!-- query参数 ： {{ $route.query.keyword_q }} -->
-    query参数 ： {{ keyword_q }}
+    <!-- query参数 ： {{ keyword_q }} -->
+
+    <TypeNav>aaaaaaaaaaaaaaaaaa</TypeNav>
   </div>
 </template>
 
