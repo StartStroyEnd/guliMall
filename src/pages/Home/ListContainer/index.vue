@@ -3,29 +3,7 @@
   <div class="list-container">
     <div class="sortList clearfix">
       <div class="center">
-        <!--banner轮播-->
-        <div class="swiper-container" id="mySwiper">
-          <div class="swiper-wrapper">
-            <div class="swiper-slide">
-              <img src="./images/banner1.jpg" />
-            </div>
-            <!-- <div class="swiper-slide">
-              <img src="./images/banner2.jpg" />
-            </div>
-            <div class="swiper-slide">
-              <img src="./images/banner3.jpg" />
-            </div>
-            <div class="swiper-slide">
-              <img src="./images/banner4.jpg" />
-            </div> -->
-          </div>
-          <!-- 如果需要分页器 -->
-          <div class="swiper-pagination"></div>
-
-          <!-- 如果需要导航按钮 -->
-          <div class="swiper-button-prev"></div>
-          <div class="swiper-button-next"></div>
-        </div>
+        <SliderLoop :bannerList="bannerList"></SliderLoop>
       </div>
       <div class="right">
         <div class="news">
@@ -43,51 +21,51 @@
           </ul>
         </div>
         <ul class="lifeservices">
-          <li class=" life-item ">
+          <li class="life-item">
             <i class="list-item"></i>
             <span class="service-intro">话费</span>
           </li>
-          <li class=" life-item ">
+          <li class="life-item">
             <i class="list-item"></i>
             <span class="service-intro">机票</span>
           </li>
-          <li class=" life-item ">
+          <li class="life-item">
             <i class="list-item"></i>
             <span class="service-intro">电影票</span>
           </li>
-          <li class=" life-item ">
+          <li class="life-item">
             <i class="list-item"></i>
             <span class="service-intro">游戏</span>
           </li>
-          <li class=" life-item">
+          <li class="life-item">
             <i class="list-item"></i>
             <span class="service-intro">彩票</span>
           </li>
-          <li class=" life-item">
+          <li class="life-item">
             <i class="list-item"></i>
             <span class="service-intro">加油站</span>
           </li>
-          <li class=" life-item">
+          <li class="life-item">
             <i class="list-item"></i>
             <span class="service-intro">酒店</span>
           </li>
-          <li class=" life-item">
+          <li class="life-item">
             <i class="list-item"></i>
             <span class="service-intro">火车票</span>
           </li>
-          <li class=" life-item ">
+          <li class="life-item">
             <i class="list-item"></i>
             <span class="service-intro">众筹</span>
           </li>
-          <li class=" life-item">
+          <li class="life-item">
             <i class="list-item"></i>
             <span class="service-intro">理财</span>
           </li>
-          <li class=" life-item">
+          <li class="life-item">
             <i class="list-item"></i>
             <span class="service-intro">礼品卡</span>
           </li>
-          <li class=" life-item">
+          <li class="life-item">
             <i class="list-item"></i>
             <span class="service-intro">白条</span>
           </li>
@@ -101,11 +79,73 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+// import Swiper from "swiper";
+// import "swiper/css/swiper.min.css";
 export default {
   name: "ListContainer",
-  data() {
-    return {};
+  mounted() {
+    this.getBannerList();
+    // new Swiper(this.$refs.banner, {
+    //   direction: "vertical", // 垂直切换选项
+    //   loop: true, // 循环模式选项
+
+    //   // 如果需要分页器
+    //   pagination: {
+    //     el: ".swiper-pagination",
+    //   },
+
+    //   // 如果需要前进后退按钮
+    //   navigation: {
+    //     nextEl: ".swiper-button-next",
+    //     prevEl: ".swiper-button-prev",
+    //   },
+
+    // // 如果需要滚动条
+    // scrollbar: {
+    //   el: ".swiper-scrollbar",
+    // },
+    // });
   },
+  methods: {
+    getBannerList() {
+      this.$store.dispatch("getBannerList");
+    },
+  },
+  computed: {
+    ...mapGetters(["bannerList"]),
+  },
+  // watch: {
+  //   bannerList: {
+  //     handler() {
+  //       //在最近一次的dom更想执行此处回调
+  //       this.$nextTick(() => {
+  //         new Swiper(this.$refs.banner, {
+  //           // direction: "vertical", // 垂直切换选项
+  //           loop: true, // 循环模式选项
+  //           autoplay: true,
+
+  //           // 如果需要分页器
+  //           pagination: {
+  //             el: ".swiper-pagination",
+  //           },
+
+  //           // 如果需要前进后退按钮
+  //           navigation: {
+  //             nextEl: ".swiper-button-next",
+  //             prevEl: ".swiper-button-prev",
+  //           },
+
+  //           // 如果需要滚动条
+  //           // scrollbar: {
+  //           //   el: ".swiper-scrollbar",
+  //           // },
+  //         });
+  //       });
+  //     },
+  //   },
+  //   immediate: true,
+  // },
 };
 </script>
 
