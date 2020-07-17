@@ -3,7 +3,19 @@
   <div class="list-container">
     <div class="sortList clearfix">
       <div class="center">
+        <!--banner轮播-->
         <SliderLoop :bannerList="bannerList"></SliderLoop>
+        <!-- <div class="swiper-container" ref="banner">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide" v-for="(banner, index) in bannerList" :key="banner.id">
+              <img :src="banner.imgUrl" />
+            </div>
+          </div>
+          <div class="swiper-pagination"></div>
+
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
+        </div> -->
       </div>
       <div class="right">
         <div class="news">
@@ -13,11 +25,21 @@
           </h4>
           <div class="clearix"></div>
           <ul class="news-list unstyled">
-            <li><span class="bold">[特惠]</span>备战开学季 全民半价购数码</li>
-            <li><span class="bold">[公告]</span>备战开学季 全民半价购数码</li>
-            <li><span class="bold">[特惠]</span>备战开学季 全民半价购数码</li>
-            <li><span class="bold">[公告]</span>备战开学季 全民半价购数码</li>
-            <li><span class="bold">[特惠]</span>备战开学季 全民半价购数码</li>
+            <li>
+              <span class="bold">[特惠]</span>备战开学季 全民半价购数码
+            </li>
+            <li>
+              <span class="bold">[公告]</span>备战开学季 全民半价购数码
+            </li>
+            <li>
+              <span class="bold">[特惠]</span>备战开学季 全民半价购数码
+            </li>
+            <li>
+              <span class="bold">[公告]</span>备战开学季 全民半价购数码
+            </li>
+            <li>
+              <span class="bold">[特惠]</span>备战开学季 全民半价购数码
+            </li>
           </ul>
         </div>
         <ul class="lifeservices">
@@ -80,76 +102,93 @@
 
 <script>
 import { mapGetters } from "vuex";
+//swiper引入js和css
 // import Swiper from "swiper";
 // import "swiper/css/swiper.min.css";
+
 export default {
   name: "ListContainer",
   mounted() {
     this.getBannerList();
+    //为什么Swiper在实例的时候放在mounted当中 静态数据是可以的
+    //动态数据就不行
+    // 静态数据一上来就加载完成了，我们页面的结构也就形成了，然后创建swiper 理所当然就可以
+    //动态数据 是我们异步请求的，mounted里面发请求完之后 立即实例化swiper,此时请求的数据不一定回来
+    //而我们的页面结构是依赖动态的数据进行创建的
     // new Swiper(this.$refs.banner, {
-    //   direction: "vertical", // 垂直切换选项
-    //   loop: true, // 循环模式选项
+    //   // direction: "vertical", // 垂直切换选项
+    //   // loop: true, // 循环模式选项
 
     //   // 如果需要分页器
     //   pagination: {
-    //     el: ".swiper-pagination",
+    //     el: ".swiper-pagination"
     //   },
 
     //   // 如果需要前进后退按钮
     //   navigation: {
     //     nextEl: ".swiper-button-next",
-    //     prevEl: ".swiper-button-prev",
-    //   },
+    //     prevEl: ".swiper-button-prev"
+    //   }
 
-    // // 如果需要滚动条
-    // scrollbar: {
-    //   el: ".swiper-scrollbar",
-    // },
+    //   // 如果需要滚动条
+    //   // scrollbar: {
+    //   //   el: ".swiper-scrollbar"
+    //   // }
     // });
   },
   methods: {
     getBannerList() {
       this.$store.dispatch("getBannerList");
-    },
+    }
   },
   computed: {
-    ...mapGetters(["bannerList"]),
+    // 总的store 内部的state比较特殊  state总的内部会有home，数据是放在home对象内部
+    // 其它的getters  mutations  actions 都没有
+    // ...mapState({
+    //   bannerList : state => state.home.bannerList
+    // })
+    ...mapGetters(["bannerList"])
   },
   // watch: {
   //   bannerList: {
   //     handler() {
-  //       //在最近一次的dom更想执行此处回调
+  //       //Vue.nextTick或者vm.$nextTick是一样的功能
+  //       //在最近的一次dom更新之后执行nextTick里面传的回调函数
   //       this.$nextTick(() => {
   //         new Swiper(this.$refs.banner, {
   //           // direction: "vertical", // 垂直切换选项
+  //           // autoplay:true,//等同于以下设置
   //           loop: true, // 循环模式选项
-  //           autoplay: true,
 
   //           // 如果需要分页器
   //           pagination: {
-  //             el: ".swiper-pagination",
+  //             el: ".swiper-pagination"
   //           },
 
   //           // 如果需要前进后退按钮
   //           navigation: {
   //             nextEl: ".swiper-button-next",
-  //             prevEl: ".swiper-button-prev",
-  //           },
+  //             prevEl: ".swiper-button-prev"
+  //           }
 
   //           // 如果需要滚动条
   //           // scrollbar: {
-  //           //   el: ".swiper-scrollbar",
-  //           // },
+  //           //   el: ".swiper-scrollbar"
+  //           // }
   //         });
   //       });
   //     },
+  //     immediate:true //立即执行，在最近dom更新之前就会执行
   //   },
-  //   immediate: true,
-  // },
+
+
+
+    
+  // }
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .list-container {
   width: 1200px;
   margin: 0 auto;

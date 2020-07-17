@@ -3,15 +3,11 @@
   <div class="floor">
     <div class="py-container">
       <div class="title clearfix">
-        <h3 class="fl">{{ floor.name }}</h3>
+        <h3 class="fl">{{floor.name}}</h3>
         <div class="fr">
           <ul class="nav-tabs clearfix">
-            <li
-              class="active"
-              v-for="(n, index) in floor.navList"
-              :key="n.text"
-            >
-              <a href="#tab1" data-toggle="tab">{{ n.text }}</a>
+            <li v-for="(n, index) in floor.navList" :key="n.text">
+              <a href="#tab1" data-toggle="tab">{{n.text}}</a>
             </li>
           </ul>
         </div>
@@ -21,14 +17,24 @@
           <div class="floor-1">
             <div class="blockgary">
               <ul class="jd-list">
-                <li v-for="(keyword, index) in floor.keywords" :key="index">
-                  {{ keyword }}
-                </li>
+                <li v-for="(keyword, index) in floor.keywords" :key="index">{{keyword}}</li>
               </ul>
               <img :src="floor.imgUrl" />
             </div>
             <div class="floorBanner">
               <SliderLoop :bannerList="floor.carouselList"></SliderLoop>
+              <!-- <div class="swiper-container" ref="floor1Swiper">
+                <div class="swiper-wrapper">
+                  <div class="swiper-slide" v-for="(carousel, index) in floor.carouselList" :key="carousel.id">
+                    <img :src="carousel.imgUrl"/>
+                  </div>
+                </div>
+
+                <div class="swiper-pagination"></div>
+
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+              </div> -->
             </div>
             <div class="split">
               <span class="floor-x-line"></span>
@@ -59,44 +65,73 @@
 </template>
 
 <script>
+// import Swiper from "swiper";
+// import "swiper/css/swiper.min.css";
 export default {
   name: "Floor",
-  props: ["floor"],
+  props:['floor'],
+  mounted(){
+    //floor 在mounted内部可以直接去实例化swiper
+    //原因： floor组件对象创建的时候，数据早都已经获取到了，因为我们是在home当中去请求的数据
+    //然后根据数据创建的floor
+    //因此我们在floor内部，结构直接就可以创建成功
+    // new Swiper(this.$refs.floor1Swiper, {
+    //   // direction: "vertical", // 垂直切换选项
+    //   // loop: true, // 循环模式选项
+
+    //   // 如果需要分页器
+    //   pagination: {
+    //     el: ".swiper-pagination"
+    //   },
+
+    //   // 如果需要前进后退按钮
+    //   navigation: {
+    //     nextEl: ".swiper-button-next",
+    //     prevEl: ".swiper-button-prev"
+    //   }
+
+    //   // 如果需要滚动条
+    //   // scrollbar: {
+    //   //   el: ".swiper-scrollbar"
+    //   // }
+    // });
+  },
   // watch: {
-  //   bannerList: {
+  //   floor: {
   //     handler() {
-  //       //在最近一次的dom更想执行此处回调
+  //       //Vue.nextTick或者vm.$nextTick是一样的功能
+  //       //在最近的一次dom更新之后执行nextTick里面传的回调函数
   //       this.$nextTick(() => {
-  //         new Swiper(this.$refs.floorSwiper, {
+  //         new Swiper(this.$refs.floor1Swiper, {
   //           // direction: "vertical", // 垂直切换选项
+  //           // autoplay:true,//等同于以下设置
   //           loop: true, // 循环模式选项
-  //           autoplay: true,
 
   //           // 如果需要分页器
   //           pagination: {
-  //             el: ".swiper-pagination",
+  //             el: ".swiper-pagination"
   //           },
 
   //           // 如果需要前进后退按钮
   //           navigation: {
   //             nextEl: ".swiper-button-next",
-  //             prevEl: ".swiper-button-prev",
-  //           },
+  //             prevEl: ".swiper-button-prev"
+  //           }
 
   //           // 如果需要滚动条
   //           // scrollbar: {
-  //           //   el: ".swiper-scrollbar",
-  //           // },
+  //           //   el: ".swiper-scrollbar"
+  //           // }
   //         });
   //       });
   //     },
-  //     immediate: true,
+  //     immediate:true //立即执行，在最近dom更新之前就会执行
   //   },
-  // },
+  // }
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .floor {
   margin-top: 15px;
 

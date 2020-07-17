@@ -5,50 +5,45 @@
     <Recommend></Recommend>
     <Rank></Rank>
     <Like></Like>
-    <Floor
-      v-for="(floor, index) in floorList"
-      :key="floor.id"
-      :floor="floor"
-    ></Floor>
+    <Floor v-for="(floor, index) in floorList" :key="floor.id" :floor="floor"></Floor>
     <Brand></Brand>
   </div>
 </template>
 
 <script>
-import ListContainer from "./ListContainer";
-import Recommend from "./Recommend";
-import Brand from "./Brand";
-import Floor from "./Floor";
-import Like from "./Like";
-import Rank from "./Rank";
-import { mapState } from "vuex";
+import ListContainer from './ListContainer'
+import Recommend from './Recommend'
+import Rank from './Rank'
+import Like from './Like'
+import Floor from './Floor'
+import Brand from './Brand'
+import { mapState } from 'vuex'
 export default {
-  name: "Home",
-  data() {
-    return {};
-  },
-  components: {
+  name: 'Home',
+  components:{
     ListContainer,
     Recommend,
-    Brand,
-    Floor,
-    Like,
     Rank,
+    Like,
+    Floor,
+    Brand
   },
-  mounted() {
-    this.getFloorList();
+  mounted(){
+    this.getFloorList()
   },
-  methods: {
-    getFloorList() {
-      this.$store.dispatch("getFloorList");
-    },
+  methods:{
+    getFloorList(){
+      this.$store.dispatch('getFloorList')
+    }
   },
-  computed: {
+  computed:{
     ...mapState({
-      floorList: (state) => state.home.floorList,
-    }),
-  },
-};
+      floorList: state => state.home.floorList
+    })
+  }
+}
 </script>
 
-<style scoped lang="less"></style>
+<style lang="less" scoped>
+
+</style>
