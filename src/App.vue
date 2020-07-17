@@ -3,38 +3,35 @@
     <Header></Header>
     <router-view></router-view>
     <!-- <Footer v-if="$route.path === '/home' || $route.path === '/search'"></Footer> -->
-    <!-- 谁的路由管理器中写有meta属性，则由此取反以指定是否渲染 -->
     <Footer v-if="!$route.meta.isHide"></Footer>
   </div>
 </template>
 
 <script>
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import Header from '@/components/Header'
+import Footer from '@/components/Footer'
 
-// 测试当前接口请求是否请求成功
-// import { reqCategoryList } from "@/api";
 export default {
-  name: "App",
-  components: {
+  name: '',
+  components:{
     Header,
-    Footer,
+    Footer
   },
-  // mounted测试当前接口请求是否请求成功
-  // mounted() {
-  //   reqCategoryList();
-  // },
+  //本来我们请求三级分类列表的功能是在TypeNav里面去做的
+  //但是放在TypeNav里面 从home切换到search，这个请求会触发两次，而数据又是一样的，所以造成浪费（效率低下）
+  // 因此我们可以优化在app当中去发请求
   mounted() {
-    //   对接actions
-    // actions对接组件对象的操作
     this.getCategoryList();
   },
-  methods: {
-    getCategoryList() {
-      this.$store.dispatch("getCategoryList");
-    },
-  },
-};
+  methods:{
+    getCategoryList(){
+      this.$store.dispatch('getCategoryList')
+    }
+  }
+
+}
 </script>
 
-<style scoped lang="less"></style>
+<style lang="less" scoped>
+
+</style>

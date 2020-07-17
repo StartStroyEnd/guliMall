@@ -29,29 +29,14 @@
     <!--头部第二行 搜索区域-->
     <div class="bottom">
       <h1 class="logoArea">
-        <!-- <a class="logo" title="尚品汇" href="###" target="_blank">
-          <img src="./images/logo.png" alt="" />
-        </a> -->
-
         <router-link to="/home" class="logo" title="尚品汇">
-          <img src="./images/logo.png" alt=""
-        /></router-link>
+          <img src="./images/logo.png" alt />
+        </router-link>
       </h1>
       <div class="searchArea">
         <form action="###" class="searchForm">
-          <input
-            type="text"
-            id="autocomplete"
-            class="input-error input-xxlarge"
-            v-model="keyword_in"
-          />
-          <button
-            class="sui-btn btn-xlarge btn-danger"
-            type="button"
-            @click="toSearch"
-          >
-            搜索
-          </button>
+          <input type="text" id="autocomplete" class="input-error input-xxlarge" v-model="keyword"/>
+          <button class="sui-btn btn-xlarge btn-danger" type="button" @click="toSearch">搜索</button>
         </form>
       </div>
     </div>
@@ -61,40 +46,58 @@
 <script>
 export default {
   name: "Header",
-  data() {
+  data(){
     return {
-      keyword_in: "",
-    };
+      keyword:''
+    }
   },
-  methods: {
-    toSearch() {
-      // 对应写法    1
-      // this.$router.push(
-      //   `/search/${
-      //     this.keyword_in
-      //   }?keyword_out=${this.keyword_in.toUpperCase()}`
-      // );
+  methods:{
+    toSearch(){
+      //
+      // this.$router.push(`/search/${this.keyword}?keyword=${this.keyword.toUpperCase()}`)
 
-      // 对应写法    2
-      this.$router.push({
-        // path: "/search",
-        name: "search",
-        query: {
-          keyword_q: this.keyword_in.toUpperCase(),
-        },
-        params: {
-          // keyword_p: this.keyword_in,
-          // keyword_p: "" || undefined,
-          keyword_p: this.keyword_in || undefined,
-        },
-        // }).catch(() => {});
-      });
-    },
-  },
+      //如果使用对象：
+      //传递params参数必须和name配合
+      //path和params无法配合使用
+      //path和query是可以使用的
+      //name和query也是可以的
+      //以后尽量写name
+      // this.$router.push({
+      //   // path:'/search',
+      //   name:'search',
+      //   query:{
+      //     keyword1:this.keyword.toUpperCase()
+      //   },
+      //   params:{
+      //     //如果传递params参数是一个空串，那么路径会有问题，传过去如果是undefined就没事
+      //     keyword:this.keyword || undefined
+      //   }
+      //   //.catch(()=>{})用来处理多次push点击报错问题，但是不能一劳永逸
+      // // }).catch(()=>{})
+      // })
+
+      let location = {
+        name:'search',
+        params:{
+          //如果传递params参数是一个空串，那么路径会有问题，传过去如果是undefined就没事
+          keyword:this.keyword || undefined
+        }
+      }
+
+      //点击搜索按钮的时候，我们不能只关注params参数，应该去看看原来有没有query参数
+      //如果有就应该把query参数也带上
+      let {query} = this.$route 
+      if(query){
+        location.query = query
+      }
+
+      this.$router.push(location)
+    }
+  }
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .header {
   & > .top {
     background-color: #eaeaea;

@@ -4,11 +4,10 @@
 
 <script>
 export default {
-  name: "Login",
-  data() {
-    return {};
-  },
-};
+  name: 'Login',
+}
 </script>
 
-<style scoped lang="less"></style>
+<style lang="less" scoped>
+
+</style>

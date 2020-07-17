@@ -1,26 +1,23 @@
-// 这个文件夹为一个接口函数文件
+//这个文件是项目的接口请求函数文件
+//给每个接口发请求，我们都把它封装成一个函数，到时需要请求拿数据的时候，就去调用对应的接口函数就完了
+import Ajax from '@/ajax/Ajax'
+import mockAjax from '@/ajax/mockAjax'
+// 请求获取三级分类列表数据
+// get   /api/product/getBaseCategoryList   参数：无
 
-// 当给发送请求时,都会封装成一个函数
-// 当需要请求后所响应的数据的时候,就直接掉用这个接口函数
+export const reqCategoryList = () => Ajax({
+  url:'/product/getBaseCategoryList',
+  method:'GET'
+})
 
-// http://182.92.128.115/api/product/getBaseCategoryList
-// get /api/product/getBaseCategoryList 无参数
 
-import Ajax from "@/ajax/Ajax";
+// 使用mock的接口去请求 banner数据   get 请求     /banner
+export const reqBannerList = () => mockAjax.get('/banner')
+export const reqFloorList = () => mockAjax.get('/floor')
 
-// 写法    1
-// reqCategoryList请求列表
-// get的第一个参数默认是url
-// export const reqCategoryList = () =>
-//   Ajax.get("/api/product/getBaseCategoryList");
 
-// 原始写法：
 
-// 部分暴露
-export const reqCategoryList = () =>
-  Ajax({
-    // 去除/api
-    url: "/product/getBaseCategoryList",
-    method: "GET",
-    // 返回ajax
-  });
+//请求search的商品搜索列表数据
+// post  /api/list   data   //data如果是空的对象代表没有搜索条件，会返回所有商品信息
+export const reqGoodsList = (searchParams) => Ajax.post('/list',searchParams)
+

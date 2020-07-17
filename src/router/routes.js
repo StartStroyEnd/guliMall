@@ -1,44 +1,36 @@
-import Home from "@/pages/Home";
-import Login from "@/pages/Login";
-import Register from "@/pages/Register";
-import Search from "@/pages/Search";
+import Home from '@/pages/Home'
+import Login from '@/pages/Login'
+import Register from '@/pages/Register'
+import Search from '@/pages/Search'
+
 export default [
   {
-    path: "/home",
-    component: Home,
+    path:'/home',
+    component:Home
   },
   {
-    path: "/login",
-    component: Login,
-    // 用来判定底部是否隐藏  （meta圆数据）
-    meta: {
-      isHide: true,
-    },
+    path:'/login',
+    component:Login,
+    // 用来判定底部是否隐藏
+    meta:{
+      isHide:true
+    }
   },
   {
-    path: "/register",
-    component: Register,
-    meta: {
-      isHide: true,
-    },
+    path:'/register',
+    component:Register,
+    meta:{
+      isHide:true
+    }
   },
   {
-    path: "/search/:keyword_in?",
-    component: Search,
-    name: "search",
-    // route为当前路由对象
-    // 测试search是否有接受到参数。
-    // props: (route) => ({
-    //   // 对应写法    1
-    //   // keyword_q: route.query.keyword_out,
-    //   // keyword_p: route.params.keyword_in,
-    //   // 对应写法    2
-    //   keyword_q: route.query.keyword_q,
-    //   keyword_p: route.params.keyword_p,
-    // }),
+    path:'/search/:keyword?',
+    component:Search,
+    name:'search',
+    // props: route => ({keyword:route.params.keyword,keyword1:route.query.keyword1})
   },
   {
-    path: "/",
-    redirect: "/home",
-  },
-];
+    path:'/',
+    redirect:'/home'
+  }
+]

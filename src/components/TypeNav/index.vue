@@ -6,136 +6,55 @@
         <h2 class="all">全部商品分类</h2>
         <transition name="show">
           <div class="sort" v-show="isShow">
-            <!-- 事件委派，进行回调 -->
             <div class="all-sort-list2" @click="toSearch">
-              <!-- 于此处对应渲染 一级列表-->
               <div
                 class="item"
                 v-for="(c1, index) in categoryList"
+                :key="c1.categoryId"
                 @mouseenter="moveIn(index)"
                 :class="{ item_on: currentIndex === index }"
-                :key="c1.categoryId"
               >
                 <h3>
-                  <!-- 1.router-link -->
-                  <!-- 2.a标签事件定义回调methods -->
-                  <!-- 编程式导航，可，但是效率不高则事件委派 -->
-                  <!-- 3.a标签事件委派 -->
-
-                  <!-- 路由传参 -->
-                  <!-- <router-link
-                    :to="{
-                      name: 'search',
-                      query: {
-                        categoryName: c1.categoryName,
-                        category1Id: c1.categoryId,
-                      },
-                    }"
-                    >{{ c1.categoryName }}</router-link
-                  > -->
-
-                  <!-- 链接 -->
-                  <!-- <a href="javascript:;" @click="toSearch(c1)">{{ -->
-                  <!-- <a
-                    href="javascript:;"
-                    @click="
-                      $router.push({
-                        name: 'search',
-                        query: {
-                          categoryName: c1.categoryName,
-                          category1Id: c1.categoryId,
-                        },
-                      })
-                    "
-                    >{{ c1.categoryName }}</a
-                  > -->
-                  <!-- 3 事件委派，自定义属性-->
                   <a
-                    href="javascipt:;"
+                    href="javascript:;"
                     :data-category1Id="c1.categoryId"
                     :data-categoryName="c1.categoryName"
                     >{{ c1.categoryName }}</a
                   >
+                  <!-- 为什么不适用声明式导航，因为一次性创建了多个组件对象影响效率，因此我们采用编程式导航去跳转 -->
+                  <!-- <router-link :to="{name:'search',query:{categoryName:c1.categoryName,category1Id:c1.categoryId}}">{{c1.categoryName}}</router-link> -->
+                  <!-- 使用了编程式导航，但是效率还不是很高，因为每个类别都添加了相同的点击事件，每个点击事件都有自己的回调函数
+                  采用事件委派（事件委托，事件代理）来处理-->
+                  <!-- <a href="javascript:;" @click="$router.push({name:'search',query:{categoryName:c1.categoryName,category1Id:c1.categoryId}})">{{c1.categoryName}}</a> -->
                 </h3>
                 <div class="item-list clearfix">
                   <div class="subitem">
-                    <!-- 二级列表 -->
                     <dl
                       class="fore"
-                      v-for="c2 in c1.categoryChild"
+                      v-for="(c2, index) in c1.categoryChild"
                       :key="c2.categoryId"
                     >
                       <dt>
-                        <!-- <router-link
-                          :to="{
-                            name: 'search',
-                            query: {
-                              categoryName: c2.categoryName,
-                              category2Id: c2.categoryId,
-                            },
-                          }"
-                          >{{ c2.categoryName }}</router-link
-                        > -->
-                        <!-- <a
-                          href="javascript:;"
-                          @click="
-                            $router.push({
-                              name: 'search',
-                              query: {
-                                categoryName: c2.categoryName,
-                                category2Id: c2.categoryId,
-                              },
-                            })
-                          "
-                          >{{ c2.categoryName }}</a
-                        > -->
+                        <!-- <router-link :to="{name:'search',query:{categoryName:c2.categoryName,category2Id:c2.categoryId}}">{{c2.categoryName}}</router-link> -->
+                        <!-- <a href="javascript:;" @click="$router.push({name:'search',query:{categoryName:c2.categoryName,category2Id:c2.categoryId}})">{{c2.categoryName}}</a> -->
 
-                        <!-- <a href="">{{ c2.categoryName }}</a> -->
-                        <!-- 3 事件委派，自定义属性-->
                         <a
-                          href="javascipt:;"
-                          :data-category1Id="c2.categoryId"
+                          href="javascript:;"
+                          :data-category2Id="c2.categoryId"
                           :data-categoryName="c2.categoryName"
                           >{{ c2.categoryName }}</a
                         >
                       </dt>
                       <dd>
-                        <!-- 三级列表 -->
-                        <em v-for="c3 in c2.categoryChild" :key="c3.categoryId">
-                          <!-- 1 -->
-                          <!-- <router-link
-                            :to="{
-                              name: 'search',
-                              query: {
-                                categoryName: c3.categoryName,
-                                category3Id: c3.categoryId,
-                              },
-                            }"
-                            >{{ -->
-
-                          <!-- 2 -->
-                          <!-- 到理由管理器对象中去修改接收 -->
-                          <!-- c3.categoryName }}</router-link
-                          > -->
-                          <!-- <a
-                            href="javascript:;"
-                            @click="
-                              $router.push({
-                                name: 'search',
-                                query: {
-                                  categoryName: c3.categoryName,
-                                  category3Id: c3.categoryId,
-                                },
-                              })
-                            "
-                            >{{ c1.categoryName }}</a
-                          > -->
-
-                          <!-- <a href="">{{ c3.categoryName }}</a> -->
-                          <!-- 3 事件委派，自定义属性-->
+                        <em
+                          v-for="(c3, index) in c2.categoryChild"
+                          :key="c3.categoryId"
+                        >
+                          <!-- <router-link :to="{name:'search',query:{categoryName:c3.categoryName,category3Id:c3.categoryId}}">{{c3.categoryName}}</router-link> -->
+                          <!-- <a href="javascript:;" @click="$router.push({name:'search',query:{categoryName:c3.categoryName,category3Id:c3.categoryId}})">{{c3.categoryName}}</a> -->
                           <a
-                            href="javascipt:;"
-                            :data-category1Id="c3.categoryId"
+                            href="javascript:;"
+                            :data-category3Id="c3.categoryId"
                             :data-categoryName="c3.categoryName"
                             >{{ c3.categoryName }}</a
                           >
@@ -165,8 +84,8 @@
 
 <script>
 import { mapState } from "vuex";
-// import _ from "lodash";
-import throttle from "lodash/throttle";
+// import _ from 'lodash'    //引入整体打包体积比较大
+import throttle from "lodash/throttle"; //只是引入节流功能
 export default {
   name: "TypeNav",
   data() {
@@ -175,63 +94,55 @@ export default {
       isShow: true,
     };
   },
+
   mounted() {
-    if (this.$route.path != "/home") {
+    if (this.$route.path !== "/home") {
       this.isShow = false;
     }
   },
+
   methods: {
-    // 鼠标移入一级分类列表控制二三级显示。
+    //鼠标移入一级分类控制23级显示
+
     // moveIn(index) {
+    //   console.log(index)
     //   this.currentIndex = index;
     // },
-    // 鼠标移出
-    moveOut() {
-      this.currentIndex = -1;
-      if (this.$route.path != "/home") {
-        this.isShow = false;
-      }
-    },
-    // moveIn: _.throttle(
+
     moveIn: throttle(
       function(index) {
+        console.log(index);
         this.currentIndex = index;
       },
-      10,
-      // trailing 拖延触发
-      // false则为当事件触发时，50毫秒开始计时的时候就执行回调
-      // true则为当事件触发时，延迟50毫秒执行回调
-      // { trailing: true }
+      50,
       { trailing: false }
     ),
 
-    // 点击跳转
-    // 参数为事件对象
-    toSearch(event) {
-      // ele:事件目标元素
-      // let ele = event.target
-      // // 获取到元素身上所有的自定义属性组成的一个对象
-      // // dataset是一个自带方法
-      // let dataSet = ele.dataset
+    //{ 'trailing': true }  拖延触发，节流操作函数触发如果是true，那么是在规定时间结束之后触发
+    //{ 'trailing': false } 不拖延触发，节流操作函数触发如果是false，那么是在规定时间开始就触发
 
-      let data = event.target.dataset;
-      // console.log(data);
-      //其中数据被转换成了小写
+    //鼠标移出隐藏23级
+    moveOut() {
+      this.currentIndex = -1;
+      if (this.$route.path !== "/home") {
+        this.isShow = false;
+      }
+    },
+
+    //点击分类跳转到search
+    toSearch(event) {
+      let data = event.target.dataset; //拿到所有儿子元素身上所有的自定义属性组成的一个对象
+      // console.log(data)
       let { categoryname, category1id, category2id, category3id } = data;
 
       if (categoryname) {
-        // 如果categoryname不存在。连location都不用创建
+        //点的一定是a标签，我们要点的
         let location = {
           name: "search",
-          // query:,
         };
-
         let query = {};
-        // 为真正的一定点击的是a标签
-        // let query = {
-        //   categoryName: categoryname,
-        // };
         query.categoryName = categoryname;
+
         if (category1id) {
           query.category1Id = category1id;
         } else if (category2id) {
@@ -239,37 +150,42 @@ export default {
         } else {
           query.category3Id = category3id;
         }
+
         location.query = query;
+
+        //点击三级分类的时候，我们也不能光关注query参数，也要去看看之前有没有params参数
+        //如果有，需要把之前的params参数也带上
+        let { params } = this.$route;
+        if (params) {
+          location.params = params;
+        }
+
         this.$router.push(location);
       }
     },
   },
   computed: {
-    // 老实人写法：
-    // 不使用mapState,其原始写法为：
-    // categoryList() {
-    //   // 若该return语句中没有.home则可以使用...mapState
-    //   return this.$store.state.home.categoryList;
-    // },
+    // categoryList(){
+    //   return this.$store.state.categoryList
+    // }
 
-    // 错误写法：
-    // 由于.home是分模块，无法直接使用rest语法直接获取
-    // 而mapState默认映射的是this.$store.state.categoryList的数据，所以不能使用数组形式来获取
-    // ...mapState(["categoryList"])
+    // ...mapState(['categoryList'])
 
-    // 正确写法：
-    // 此时将数据传递到当前组件中
+    //上面两种写法是一回事，mapState映射的时候默认映射的就是总的store的state内部的数据
+    //如果使用了vuex模块化开发，那么数组的形式就无法使用了
+
+    // categoryList(){
+    //   return this.$store.state.home.categoryList
+    // }
+
     ...mapState({
-      // 添加花括号时一定要有return，没有就不能加，否则无法获取
-      // 箭头函数=>获取的是这个方法的返回值
-      // 当前只返回一个返回值
       categoryList: (state) => state.home.categoryList,
     }),
   },
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .type-nav {
   border-bottom: 2px solid #e1251b;
 
@@ -278,6 +194,18 @@ export default {
     margin: 0 auto;
     display: flex;
     position: relative;
+
+    .show-enter {
+      height: 0;
+      opacity: 0;
+    }
+    .show-enter-to {
+      height: 461px;
+      opacity: 1;
+    }
+    .show-enter-active {
+      transition: all 3s;
+    }
 
     .all {
       width: 210px;
@@ -307,19 +235,10 @@ export default {
       width: 210px;
       height: 461px;
       position: absolute;
-      background: #fafafa;
+      // background: #fafafa;
+      background: #eee;
       z-index: 999;
-      &.show-enter {
-        height: 0;
-        opacity: 0;
-      }
-      &.show-enter-to {
-        height: 461px;
-        opacity: 1;
-      }
-      &.show-enter-active {
-        transition: all 2s;
-      }
+
       .all-sort-list2 {
         .item {
           h3 {
@@ -390,7 +309,7 @@ export default {
           }
 
           &.item_on {
-            background-color: #eee;
+            background-color: #aaa;
             .item-list {
               display: block;
             }

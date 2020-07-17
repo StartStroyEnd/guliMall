@@ -1,30 +1,37 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+Vue.use(VueRouter)
 
-Vue.use(VueRouter);
-// 存储一份
 
-const originpush = VueRouter.prototype.push;
-const originReplace = VueRouter.prototype.replace;
+//终极解决多次触发push或者repalce，报错的问题
+//NavigationDuplicated
 
-VueRouter.prototype.push = function(location, onResolved, onRjected) {
-  if (onResolved === undefined && onRjected === undefined) {
-    return originpush.call(this, location).catch(() => {});
-  } else {
-    return originpush.call(this, location, onResolved, onRjected);
+const originPush = VueRouter.prototype.push
+const originReplace = VueRouter.prototype.replace
+
+VueRouter.prototype.push = function(location,onResolved,onRejected){
+  if(onResolved === undefined && onRejected === undefined){
+    // originPush.call目的是让VueRouter实例化对象去调用‘
+    //如果不加，那就是window在调用
+    return originPush.call(this,location).catch(() => {})
+  }else{
+    return originPush.call(this,location,onResolved,onRejected)
   }
-};
-VueRouter.prototype.replace = function(location, onResolved, onRjected) {
-  if (onResolved === undefined && onRjected === undefined) {
-    return originReplace.call(this, location).catch(() => {});
-  } else {
-    return originReplace.call(this, location, onResolved, onRjected);
-  }
-};
+}
 
-import routes from "@/router/routes";
+VueRouter.prototype.replace = function(location,onResolved,onRejected){
+  if(onResolved === undefined && onRejected === undefined){
+    // originPush.call目的是让VueRouter实例化对象去调用‘
+    //如果不加，那就是window在调用
+    return originReplace.call(this,location).catch(() => {})
+  }else{
+    return originReplace.call(this,location,onResolved,onRejected)
+  }
+}
+
+
+import routes from '@/router/routes'
 
 export default new VueRouter({
-  // routes: routes,
-  routes,
-});
+  routes
+})

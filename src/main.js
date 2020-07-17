@@ -1,19 +1,27 @@
-import Vue from "vue";
-import App from "@/App";
-import router from "@/router";
-import TypeNav from "@/components/TypeNav";
-// 引入状态管理器插件（vuex）
-import store from "@/store";
+import Vue from 'vue'
+import App from '@/App.vue'
+import router from '@/router'
+import store from '@/store'
+import TypeNav from '@/components/TypeNav'
+import SliderLoop from '@/components/SliderLoop'
+import '@/mock/mockServer'
 
-Vue.component("TypeNav", TypeNav);
+//这个是为了测试接口请求函数  后期也会使用这样的方式去使用
+import * as API from '@/api'
+// console.log(API)
+// API.reqBannerList()
+// API.reqGoodsList({})
 
-Vue.config.productionTip = false;
+
+Vue.config.productionTip = false
+
+Vue.component('TypeNav',TypeNav)
+Vue.component('SliderLoop',SliderLoop)
+
 
 new Vue({
-  render: (h) => h(App),
-  // 注册
-  // 让每一个组件都可以获得this.$router路由器对象
+  el:'#app',
+  render: h => h(App),
   router,
-  // 让每一个组件都可以获得this.$store对象
-  store,
-}).$mount("#app");
+  store
+})

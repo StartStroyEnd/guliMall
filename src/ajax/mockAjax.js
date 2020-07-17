@@ -9,7 +9,7 @@ import 'nprogress/nprogress.css'
 
 
 const service = axios.create({
-  baseURL: '/api',  // 配置基础路径
+  baseURL: '/mock',  // 配置基础路径
   timeout: 20000,  //和超时限制
 });
 
