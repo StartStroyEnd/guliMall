@@ -160,7 +160,13 @@ export default {
           location.params = params;
         }
 
-        this.$router.push(location);
+        // 判断当前是否是从home页面去到search页面
+        // 如果不是则使用replace回到首页
+        if (this.$route.path != "/home") {
+          this.$router.replace(location);
+        } else {
+          this.$router.push(location);
+        }
       }
     },
   },

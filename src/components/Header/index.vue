@@ -102,7 +102,13 @@ export default {
         location.query = query;
       }
 
-      this.$router.push(location);
+      // this.$router.push(location);
+      // 解决去到search页面以后，无法跳转回home页面
+      if (this.$route.path != "/home") {
+        this.$router.replace(location);
+      } else {
+        this.$router.push(location);
+      }
     },
     // 清除搜索框搜索完毕后的参数。
     clearKeyword() {

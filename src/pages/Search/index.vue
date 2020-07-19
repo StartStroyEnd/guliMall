@@ -45,9 +45,34 @@
           <div class="sui-navbar">
             <div class="navbar-inner filter">
               <ul class="sui-nav">
-                <li class="active">
-                  <a href="#">综合</a>
+                <li :class="{ active: sortFlag === '1' }">
+                  <a href="javascript:;" @click="sortGoods('1')"
+                    >综合
+                    <i
+                      class="iconfont"
+                      :class="{
+                        iconup: sortType === 'asc',
+                        icondown: sortType === 'desc',
+                      }"
+                      v-if="sortFlag === '1'"
+                    ></i>
+                  </a>
                 </li>
+                <!-- 代码优化 -->
+                <!-- <li :class="{ active: sortFlag === '1' }">
+                  <a href="javascript:;" @click="sortGoods('1')"
+                    >综合
+                    <i
+                      class="iconfont"
+                      :class="{
+                        iconup: sortType === 'asc',
+                        icondown: sortType === 'desc',
+                      }"
+                      v-if="sortType === '1'"
+                    ></i>
+                  </a>
+                </li> -->
+
                 <li>
                   <a href="#">销量</a>
                 </li>
@@ -57,12 +82,33 @@
                 <li>
                   <a href="#">评价</a>
                 </li>
-                <li>
-                  <a href="#">价格⬆</a>
+                <li :class="{ active: sortFlag === '2' }">
+                  <a href="javascript:;" @click="sortGoods('2')">
+                    价格
+                    <i
+                      class="iconfont"
+                      v-if="sortFlag === '2'"
+                      :class="{
+                        iconup: sortType === 'asc',
+                        icondown: sortType === 'desc',
+                      }"
+                    ></i>
+                  </a>
                 </li>
-                <li>
-                  <a href="#">价格⬇</a>
-                </li>
+                <!-- 代码优化 -->
+                <!-- <li :class="{ active: sortFlag === '2' }">
+                  <a href="javascript:;" @click="sortGoods('2')">
+                    价格
+                    <i
+                      class="iconfont"
+                      v-if="sortFlag === '2'"
+                      :class="{
+                        inconup: sortType === 'asc',
+                        icondown: sortType === 'desc',
+                      }"
+                    ></i>
+                  </a>
+                </li> -->
               </ul>
             </div>
           </div>
@@ -75,9 +121,9 @@
               >
                 <div class="list-wrap">
                   <div class="p-img">
-                    <a href="item.html" target="_blank">
+                    <router-link href="item.html" :to="`/detail/${goods.id}`">
                       <img :src="goods.defaultImg" />
-                    </a>
+                    </router-link>
                   </div>
                   <div class="price">
                     <strong>
@@ -115,39 +161,15 @@
               </li>
             </ul>
           </div>
-          <div class="fr page">
-            <div class="sui-pagination clearfix">
-              <ul>
-                <li class="prev disabled">
-                  <a href="#">«上一页</a>
-                </li>
-                <li class="active">
-                  <a href="#">1</a>
-                </li>
-                <li>
-                  <a href="#">2</a>
-                </li>
-                <li>
-                  <a href="#">3</a>
-                </li>
-                <li>
-                  <a href="#">4</a>
-                </li>
-                <li>
-                  <a href="#">5</a>
-                </li>
-                <li class="dotted">
-                  <span>...</span>
-                </li>
-                <li class="next">
-                  <a href="#">下一页»</a>
-                </li>
-              </ul>
-              <div>
-                <span>共10页&nbsp;</span>
-              </div>
-            </div>
-          </div>
+          <!-- 定义自定义事件名="事件回调，可接收子组件参数" -->
+          <!-- 于子组件定义props通信 -->
+          <Pagination
+            :currentPageNum="searchParams.pageNo"
+            :pageSize="searchParams.pageSize"
+            :total="goodsListInfo.total"
+            :continueNum="5"
+            @changePage="changePageNum"
+          ></Pagination>
         </div>
       </div>
     </div>
@@ -156,7 +178,7 @@
 
 <script>
 import SearchSelector from "./SearchSelector/SearchSelector";
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 export default {
   name: "Search",
   data() {
@@ -171,7 +193,7 @@ export default {
         keyword: "",
         order: "1:desc",
         pageNo: 1,
-        pageSize: 10,
+        pageSize: 4,
         props: [],
         trademark: "",
       },
@@ -214,7 +236,7 @@ export default {
     removeCategoryParams() {
       this.searchParams.categoryName = "";
       // this.getGoodsListInfo();
-      this.$router.push({ name: "search", params: this.$route.params });
+      this.$router.replace({ name: "search", params: this.$route.params });
     },
     // 删除二级面包屑
     removeKeyword() {
@@ -248,9 +270,35 @@ export default {
       this.searchParams.props.splice(index, 1);
       this.getGoodsListInfo();
     },
+    sortGoods(sortFlag) {
+      let originFlag = this.sortFlag;
+      let originType = this.sortType;
+      let newOrder;
+      if (sortFlag === originFlag) {
+        newOrder = `${sortFlag}:${originType === "desc" ? "asc" : "desc"}`;
+      } else {
+        newOrder = `${sortFlag}:desc`;
+      }
+      this.searchParams.order = newOrder;
+      this.getGoodsListInfo();
+    },
+    changePageNum(num) {
+      this.searchParams.pageNo = num;
+      this.getGoodsListInfo();
+    },
   },
   computed: {
     ...mapGetters(["goodsList"]),
+    sortFlag() {
+      return this.searchParams.order.split(":")[0];
+    },
+    sortType() {
+      return this.searchParams.order.split(":")[1];
+    },
+    // 获取当前分页页码总数
+    ...mapState({
+      goodsListInfo: (state) => state.search.goodsListInfo,
+    }),
   },
   watch: {
     $route() {

@@ -1,36 +1,41 @@
-import Home from '@/pages/Home'
-import Login from '@/pages/Login'
-import Register from '@/pages/Register'
-import Search from '@/pages/Search'
+import Home from "@/pages/Home";
+import Login from "@/pages/Login";
+import Register from "@/pages/Register";
+import Search from "@/pages/Search";
+import Detail from "@/pages/Detail";
 
 export default [
   {
-    path:'/home',
-    component:Home
+    path: "/detail/:goodsId",
+    component: Detail,
   },
   {
-    path:'/login',
-    component:Login,
+    path: "/home",
+    component: Home,
+  },
+  {
+    path: "/login",
+    component: Login,
     // 用来判定底部是否隐藏
-    meta:{
-      isHide:true
-    }
+    meta: {
+      isHide: true,
+    },
   },
   {
-    path:'/register',
-    component:Register,
-    meta:{
-      isHide:true
-    }
+    path: "/register",
+    component: Register,
+    meta: {
+      isHide: true,
+    },
   },
   {
-    path:'/search/:keyword?',
-    component:Search,
-    name:'search',
+    path: "/search/:keyword?",
+    component: Search,
+    name: "search",
     // props: route => ({keyword:route.params.keyword,keyword1:route.query.keyword1})
   },
   {
-    path:'/',
-    redirect:'/home'
-  }
-]
+    path: "/",
+    redirect: "/home",
+  },
+];

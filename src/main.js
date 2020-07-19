@@ -5,6 +5,7 @@ import store from "@/store";
 import TypeNav from "@/components/TypeNav";
 import SliderLoop from "@/components/SliderLoop";
 import "@/mock/mockServer";
+import Pagination from "@/components/Pagination";
 
 //这个是为了测试接口请求函数  后期也会使用这样的方式去使用
 import * as API from "@/api";
@@ -16,6 +17,7 @@ Vue.config.productionTip = false;
 
 Vue.component("TypeNav", TypeNav);
 Vue.component("SliderLoop", SliderLoop);
+Vue.component("Pagination", Pagination);
 
 new Vue({
   beforeCreate() {

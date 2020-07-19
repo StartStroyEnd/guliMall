@@ -1,28 +1,26 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import home from './home'
-import search from './search'
-Vue.use(Vuex)
+import Vue from "vue";
+import Vuex from "vuex";
+import home from "./home";
+import search from "./search";
+import detail from "./detail";
+Vue.use(Vuex);
 
+const state = {};
 
+const mutations = {};
 
-const state = {}
+const actions = {};
 
-const mutations = {}
-
-const actions = {}
-
-const getters = {}
-
-
+const getters = {};
 
 export default new Vuex.Store({
   state,
   mutations,
   actions,
   getters,
-  modules:{
+  modules: {
     home,
-    search
-  }
-})
+    search,
+    detail,
+  },
+});
