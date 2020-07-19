@@ -11,24 +11,34 @@
             </li>
           </ul>
           <ul class="fl sui-tag">
-            <li class="with-x">手机</li>
-            <li class="with-x">
-              iphone
-              <i>×</i>
+            <li class="with-x" v-if="searchParams.categoryName">
+              {{ searchParams.categoryName }}
+              <i @click="removeCategoryParams">×</i>
             </li>
-            <li class="with-x">
-              华为
-              <i>×</i>
+            <li class="with-x" v-if="searchParams.keyword">
+              {{ searchParams.keyword }}
+              <i @click="removeKeyword">×</i>
             </li>
-            <li class="with-x">
-              OPPO
-              <i>×</i>
+            <li class="with-x" v-if="searchParams.trademark">
+              {{ searchParams.trademark.split(":")[1] }}
+              <i @click="removeTrademark">×</i>
+            </li>
+            <li
+              class="with-x"
+              v-for="(prop, index) in searchParams.props"
+              :key="index"
+            >
+              {{ prop.split(":")[1] }}
+              <i @click="removeProp(index)">×</i>
             </li>
           </ul>
         </div>
 
         <!--selector-->
-        <SearchSelector />
+        <SearchSelector
+          @searchForTrademark="searchForTrademark"
+          @searchForAttr="searchForAttr"
+        />
 
         <!--details-->
         <div class="details clearfix">
@@ -58,7 +68,11 @@
           </div>
           <div class="goods-list">
             <ul class="yui3-g">
-              <li class="yui3-u-1-5" v-for="(goods, index) in goodsList" :key="goods.id">
+              <li
+                class="yui3-u-1-5"
+                v-for="(goods, index) in goodsList"
+                :key="goods.id"
+              >
                 <div class="list-wrap">
                   <div class="p-img">
                     <a href="item.html" target="_blank">
@@ -68,7 +82,7 @@
                   <div class="price">
                     <strong>
                       <em>¥</em>
-                      <i>{{goods.price}}</i>
+                      <i>{{ goods.price }}</i>
                     </strong>
                   </div>
                   <div class="attr">
@@ -77,7 +91,7 @@
                       href="item.html"
                       title="促销信息，下单即赠送三个月CIBN视频会员卡！【小米电视新品4A 58 火爆预约中】"
                     >
-                      {{goods.title}}
+                      {{ goods.title }}
                     </a>
                   </div>
                   <div class="commit">
@@ -91,8 +105,11 @@
                       href="success-cart.html"
                       target="_blank"
                       class="sui-btn btn-bordered btn-danger"
-                    >加入购物车</a>
-                    <a href="javascript:void(0);" class="sui-btn btn-bordered">收藏</a>
+                      >加入购物车</a
+                    >
+                    <a href="javascript:void(0);" class="sui-btn btn-bordered"
+                      >收藏</a
+                    >
                   </div>
                 </div>
               </li>
@@ -139,7 +156,7 @@
 
 <script>
 import SearchSelector from "./SearchSelector/SearchSelector";
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 export default {
   name: "Search",
   data() {
@@ -156,25 +173,94 @@ export default {
         pageNo: 1,
         pageSize: 10,
         props: [],
-        trademark: ""
-      }
+        trademark: "",
+      },
     };
+  },
+  beforeMount() {
+    this.handlerSearchParams();
   },
   mounted() {
     this.getGoodsListInfo();
   },
   methods: {
     getGoodsListInfo() {
-      this.$store.dispatch("getGoodsListInfo",this.searchParams);
-    }
-  },
-  computed:{
-    ...mapGetters(['goodsList'])
-  },
+      this.$store.dispatch("getGoodsListInfo", this.searchParams);
+    },
+    handlerSearchParams() {
+      let { keyword } = this.$route.params;
+      let {
+        categoryName,
+        category1Id,
+        category2Id,
+        category3Id,
+      } = this.$route.query;
+      let searchParams = {
+        ...this.searchParams,
+        keyword,
+        categoryName,
+        category1Id,
+        category2Id,
+        category3Id,
+      };
+      Object.keys(searchParams).forEach((item) => {
+        if (!searchParams[item]) {
+          delete searchParams[item];
+        }
+        this.searchParams = searchParams;
+      });
+    },
+    // 通过事件删除当前的i标签，也就是一级面包屑，但是此时搜索框中的数据还有显示
+    removeCategoryParams() {
+      this.searchParams.categoryName = "";
+      // this.getGoodsListInfo();
+      this.$router.push({ name: "search", params: this.$route.params });
+    },
+    // 删除二级面包屑
+    removeKeyword() {
+      this.searchParams.keyword = "";
+      // this.getGoodsListInfo();
+      // 使用全局事件总线方式，当移除二级面包屑的时候，清空输入框的内容
+      this.$bus.$emit("clearKeyword");
 
+      this.$router.push({ name: "search", query: this.$route.query });
+    },
+    // 通过自定义事件，来对其子组件的通信，将其点击的对应的分类来渲染对应数据
+    searchForTrademark(trademark) {
+      this.searchParams.trademark = `${trademark.tmId}:${trademark.tmName}`;
+      this.getGoodsListInfo();
+    },
+    // 删除自定义事件的品牌面包屑
+    removeTrademark() {
+      this.searchParams.trademark = "";
+      this.getGoodsListInfo();
+    },
+    //根据属性搜索
+    // 自定义事件名，点击后，添加商品特性面包屑检索
+    searchForAttr(attr, attrValue) {
+      this.searchParams.props.push(
+        `${attr.attrId}:${attrValue}:${attr.attrName}`
+      );
+      this.getGoodsListInfo();
+    },
+    // 删除自定义商品特性面包屑重新发送ajax请求
+    removeProp(index) {
+      this.searchParams.props.splice(index, 1);
+      this.getGoodsListInfo();
+    },
+  },
+  computed: {
+    ...mapGetters(["goodsList"]),
+  },
+  watch: {
+    $route() {
+      this.handlerSearchParams();
+      this.getGoodsListInfo();
+    },
+  },
   components: {
-    SearchSelector
-  }
+    SearchSelector,
+  },
 };
 </script>
 
