@@ -21,3 +21,7 @@ export const reqGoodsList = (searchParams) => Ajax.post("/list", searchParams);
 
 // 请求商品详情数据
 export const reqGoodsDetailInfo = (skuId) => Ajax.get(`/item/${skuId}`);
+
+// 请求添加购物车
+export const reqAddOrUpdateShopCart = (skuId, skuNum) =>
+  Ajax.post(`/cart/addToCart/${skuId}/${skuNum}`);
