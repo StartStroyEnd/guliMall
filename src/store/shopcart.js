@@ -7,6 +7,7 @@ const actions = {
   //异步请求数据
   //async 和 await的用法
   async addorUpdateShopCart({ commit }, { skuId, skuNum }) {
+    console.log(111);
     const result = await reqAddOrUpdateShopCart(skuId, skuNum);
     if (result.code === 200) {
       return "添加购物车成功";
