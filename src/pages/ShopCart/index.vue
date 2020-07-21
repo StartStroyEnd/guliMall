@@ -1,0 +1,403 @@
+<template>
+  <div class="cart">
+    <h4>全部商品</h4>
+    <div class="cart-main">
+      <div class="cart-th">
+        <div class="cart-th1">全部</div>
+        <div class="cart-th2">商品</div>
+        <div class="cart-th3">单价（元）</div>
+        <div class="cart-th4">数量</div>
+        <div class="cart-th5">小计（元）</div>
+        <div class="cart-th6">操作</div>
+      </div>
+      <div class="cart-body">
+        <ul
+          class="cart-list"
+          v-for="(cart, index) in shopCartList"
+          :key="cart.id"
+        >
+          <li class="cart-list-con1">
+            <input
+              type="checkbox"
+              name="chk_list"
+              :checked="cart.isChecked"
+              @click="updateOneIscheck(cart)"
+            />
+          </li>
+          <li class="cart-list-con2">
+            <img :src="cart.imgUrl" />
+            <div class="item-msg">
+              {{ cart.skuName }}
+            </div>
+          </li>
+          <li class="cart-list-con4">
+            <span class="price">{{ cart.skuPrice }}</span>
+          </li>
+          <li class="cart-list-con5">
+            <a
+              href="javascript:void(0)"
+              class="mins"
+              @click="updateCartNum(cart, -1)"
+              >-</a
+            >
+            <input
+              autocomplete="off"
+              type="text"
+              minnum="1"
+              class="itxt"
+              :value="cart.skuNum"
+              @change="updateCartNum(cart, $event.target.value * 1)"
+            />
+
+            <a
+              href="javascript:void(0)"
+              class="plus"
+              @click="updateCartNum(cart, 1)"
+              >+</a
+            >
+          </li>
+          <li class="cart-list-con6">
+            <span class="sum">{{ cart.skuNum * cart.skuPrice }}</span>
+          </li>
+          <li class="cart-list-con7">
+            <a href="#none" class="sindelet">删除</a>
+            <br />
+            <a href="#none">移到收藏</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="cart-tool">
+      <div class="select-all">
+        <input class="chooseAll" type="checkbox" v-model="isAllChecked" />
+        <span>全选</span>
+      </div>
+      <div class="option">
+        <a href="#none">删除选中的商品</a>
+        <a href="#none">移到我的关注</a>
+        <a href="#none">清除下柜商品</a>
+      </div>
+      <div class="money-box">
+        <!-- 通过计算属性来计算当前选择的几件商品 -->
+        <div class="chosed">
+          已选择 <span>{{ checkedNum }}</span
+          >件商品
+        </div>
+        <div class="sumprice">
+          <em>总价（不含运费） ：</em>
+          <i class="summoney">{{ allMoney }}</i>
+        </div>
+        <div class="sumbtn">
+          <a class="sum-btn" href="###" target="_blank">结算</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { mapState } from "vuex";
+export default {
+  name: "ShopCart",
+  mounted() {
+    this.getShopCartList();
+  },
+  methods: {
+    getShopCartList() {
+      this.$store.dispatch("getShopCartList");
+    },
+    async updateCartNum(cart, changeNum) {
+      if (cart.skuNum + changeNum < 1) {
+        changeNum = 1 - cart.skuNum;
+      }
+      try {
+        await this.$store.dispatch("addorUpdateShopCart", {
+          skuId: cart.skuId,
+          skuNum: changeNum,
+        });
+        this.getShopCartList();
+      } catch (error) {
+        alert(error.message);
+      }
+    },
+    async updateOneIscheck(cart) {
+      try {
+        await this.$store.dispatch("updateIsChecked", {
+          skuId: cart.skuId,
+          isChecked: cart.isChecked === 1 ? 0 : 1,
+        });
+        this.getShopCartList();
+      } catch (error) {
+        alert(error.message);
+      }
+    },
+  },
+  // 用于遍历通过uuid所存储的唯一标识然后，通过vuex中获取到的state内的shopcartlist的数组
+  // 遍历出当前商品的信息
+  computed: {
+    ...mapState({
+      // 获取vuex中的数据存入shopCartList中，供该组件使用
+      shopCartList: (state) => state.shopcart.shopCartList,
+    }),
+    // 计算当前已经添加到购物车多少个商品了
+    checkedNum() {
+      // 参数1：回调（必须）
+      // 参数1回调中的第一个参数（必须）
+      // pre相当于上一个，也是临时变量合计（可用于计算），该参数需要看外界的第二个参数
+      // pre要么是初始值，要么是合计返回值
+      // item当前元素
+      // index则为下标
+      return this.shopCartList.reduce((pre, item, index) => {
+        // 如果当前这个商品被选中
+        if (item.isChecked) {
+          // 计算skuNum，也就是加入购物车前的商品个数添加
+          // 合计到pre中
+          pre += item.skuNum;
+        }
+        // 返回计算总值
+        return pre;
+        // 参数2：初始值   为0（必须）
+      }, 0);
+    },
+    // 总价格
+    allMoney() {
+      return this.shopCartList.reduce((pre, item, index) => {
+        // 当前这个商品是否被选中
+        if (item.isChecked) {
+          // 上一个商品所计算出的价格 += 当前这个商品的价格
+          pre += item.skuNum * item.skuPrice;
+        }
+        return pre;
+      }, 0);
+    },
+    isAllChecked: {
+      get() {
+        // 如果当前所有商品都被选中,才返回为true
+        // every 全真则真
+        // some  有真则真
+        return this.shopCartList.every((item, index) => item.isChecked === 1);
+      },
+      async set(val) {
+        try {
+          const result = await this.$store.dispatch(
+            "updateAllIsChecked",
+            val ? 1 : 0
+          );
+          this.getShopCartList();
+        } catch (error) {
+          alert(err.message);
+        }
+      },
+    },
+  },
+};
+</script>
+
+<style lang="less" scoped>
+.cart {
+  width: 1200px;
+  margin: 0 auto;
+
+  h4 {
+    margin: 9px 0;
+    font-size: 14px;
+    line-height: 21px;
+  }
+
+  .cart-main {
+    .cart-th {
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      padding: 10px;
+      overflow: hidden;
+
+      & > div {
+        float: left;
+      }
+
+      .cart-th1 {
+        width: 25%;
+
+        input {
+          vertical-align: middle;
+        }
+
+        span {
+          vertical-align: middle;
+        }
+      }
+
+      .cart-th2 {
+        width: 25%;
+      }
+
+      .cart-th3,
+      .cart-th4,
+      .cart-th5,
+      .cart-th6 {
+        width: 12.5%;
+      }
+    }
+
+    .cart-body {
+      margin: 15px 0;
+      border: 1px solid #ddd;
+
+      .cart-list {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        overflow: hidden;
+
+        & > li {
+          float: left;
+        }
+
+        .cart-list-con1 {
+          width: 15%;
+        }
+
+        .cart-list-con2 {
+          width: 35%;
+
+          img {
+            width: 82px;
+            height: 82px;
+            float: left;
+          }
+
+          .item-msg {
+            float: left;
+            width: 150px;
+            margin: 0 10px;
+            line-height: 18px;
+          }
+        }
+
+        .cart-list-con4 {
+          width: 10%;
+        }
+
+        .cart-list-con5 {
+          width: 17%;
+
+          .mins {
+            border: 1px solid #ddd;
+            border-right: 0;
+            float: left;
+            color: #666;
+            width: 6px;
+            text-align: center;
+            padding: 8px;
+          }
+
+          input {
+            border: 1px solid #ddd;
+            width: 40px;
+            height: 33px;
+            float: left;
+            text-align: center;
+            font-size: 14px;
+          }
+
+          .plus {
+            border: 1px solid #ddd;
+            border-left: 0;
+            float: left;
+            color: #666;
+            width: 6px;
+            text-align: center;
+            padding: 8px;
+          }
+        }
+
+        .cart-list-con6 {
+          width: 10%;
+
+          .sum {
+            font-size: 16px;
+          }
+        }
+
+        .cart-list-con7 {
+          width: 13%;
+
+          a {
+            color: #666;
+          }
+        }
+      }
+    }
+  }
+
+  .cart-tool {
+    overflow: hidden;
+    border: 1px solid #ddd;
+
+    .select-all {
+      padding: 10px;
+      overflow: hidden;
+      float: left;
+
+      span {
+        vertical-align: middle;
+      }
+
+      input {
+        vertical-align: middle;
+      }
+    }
+
+    .option {
+      padding: 10px;
+      overflow: hidden;
+      float: left;
+
+      a {
+        float: left;
+        padding: 0 10px;
+        color: #666;
+      }
+    }
+
+    .money-box {
+      float: right;
+
+      .chosed {
+        line-height: 26px;
+        float: left;
+        padding: 0 10px;
+      }
+
+      .sumprice {
+        width: 200px;
+        line-height: 22px;
+        float: left;
+        padding: 0 10px;
+
+        .summoney {
+          color: #c81623;
+          font-size: 16px;
+        }
+      }
+
+      .sumbtn {
+        float: right;
+
+        a {
+          display: block;
+          position: relative;
+          width: 96px;
+          height: 52px;
+          line-height: 52px;
+          color: #fff;
+          text-align: center;
+          font-size: 18px;
+          font-family: "Microsoft YaHei";
+          background: #e1251b;
+          overflow: hidden;
+        }
+      }
+    }
+  }
+}
+</style>
