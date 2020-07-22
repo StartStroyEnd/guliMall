@@ -6,7 +6,16 @@
       <div class="container">
         <div class="loginList">
           <p>尚品汇欢迎您！</p>
-          <p>
+          <!-- 登录状态 -->
+          <p v-if="userInfo.name">
+            <!-- <router-link to="/login">登录</router-link> -->
+            <a href="javascript:;">{{ userInfo.name }}</a>
+            <!-- <router-link to="/register" class="register">退出登录</router-link> -->
+            <a href="javascript:;" class="register" @click="logout">退出登录</a>
+          </p>
+
+          <!-- 未登录状态 -->
+          <p v-else>
             <span>请</span>
             <router-link to="/login">登录</router-link>
             <!-- <a href="###">登录</a> -->
@@ -55,6 +64,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "Header",
   data() {
@@ -115,9 +125,26 @@ export default {
       // 开启的全局事件总线中，需要在当前页面挂载完毕以后，清除当前搜索框的内容
       this.keyword = "";
     },
+    async logout() {
+      // 退出登录
+      // 也需要发送请求。
+      try {
+        this.$store.dispatch("userlogout");
+        alert("退出成功！即将返回首页");
+        this.$router.push("/home");
+      } catch (error) {
+        alert(error.message);
+      }
+    },
   },
   mounted() {
     this.$bus.$on("clearKeyword", this.clearKeyword);
+  },
+  computed: {
+    // 从用户的state当中去获取用户信息
+    ...mapState({
+      userInfo: (state) => state.user.userInfo,
+    }),
   },
 };
 </script>

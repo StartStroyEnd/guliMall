@@ -2,6 +2,7 @@ import {
   reqAddOrUpdateShopCart,
   reqShopCartList,
   reqUpdateIsChecked,
+  reqDeleteCart,
 } from "@/api";
 
 const state = {
@@ -68,6 +69,27 @@ const actions = {
       promises.push(promise);
     });
     // 使用promise对象中的all方法，全成即成，一败全败
+    return Promise.all(promises);
+  },
+
+  // 请求响应函数：（请求删除单个商品）
+  async deleteShopCart({ commit }, skuId) {
+    const result = await reqDeleteCart(skuId);
+    if (result.code === 200) {
+      return "当前商品删除成功！";
+    } else {
+      return Promise.reject(new Error("删除当前商品失败！"));
+    }
+  },
+  // 请求响应函数：（请求删除所有选中的商品）
+  async deleteCheckedShopCart({ commit, dispatch, state }) {
+    let promises = [];
+    state.shopCartList.forEach((item) => {
+      if (!item.isChecked) return;
+      // 本质上我们还是调用dispatch使用删除单个的请求，进行一个一个的删除。
+      let promise = dispatch("deleteShopCart", item.skuId);
+      promises.push(promise);
+    });
     return Promise.all(promises);
   },
 };

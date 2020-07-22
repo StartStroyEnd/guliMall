@@ -28,6 +28,14 @@ service.interceptors.request.use((config) => {
     config.headers.userTempId = userTempId;
   }
 
+  // 在请求头中，添加用户登录过后的token信息，让每一个ajax请求都有带这个参数
+  // 通过不同的标识来识别当前用户的订单，购物车...
+  let token = store.state.user.userInfo.token;
+  // 如果vuex中有保存token，
+  if (token) {
+    config.headers.token = token;
+  }
+
   return config;
 });
 // 响应拦截器

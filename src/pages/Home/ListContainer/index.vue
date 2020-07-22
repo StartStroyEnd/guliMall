@@ -25,21 +25,11 @@
           </h4>
           <div class="clearix"></div>
           <ul class="news-list unstyled">
-            <li>
-              <span class="bold">[特惠]</span>备战开学季 全民半价购数码
-            </li>
-            <li>
-              <span class="bold">[公告]</span>备战开学季 全民半价购数码
-            </li>
-            <li>
-              <span class="bold">[特惠]</span>备战开学季 全民半价购数码
-            </li>
-            <li>
-              <span class="bold">[公告]</span>备战开学季 全民半价购数码
-            </li>
-            <li>
-              <span class="bold">[特惠]</span>备战开学季 全民半价购数码
-            </li>
+            <li><span class="bold">[特惠]</span>备战开学季 全民半价购数码</li>
+            <li><span class="bold">[公告]</span>备战开学季 全民半价购数码</li>
+            <li><span class="bold">[特惠]</span>备战开学季 全民半价购数码</li>
+            <li><span class="bold">[公告]</span>备战开学季 全民半价购数码</li>
+            <li><span class="bold">[特惠]</span>备战开学季 全民半价购数码</li>
           </ul>
         </div>
         <ul class="lifeservices">
@@ -139,7 +129,7 @@ export default {
   methods: {
     getBannerList() {
       this.$store.dispatch("getBannerList");
-    }
+    },
   },
   computed: {
     // 总的store 内部的state比较特殊  state总的内部会有home，数据是放在home对象内部
@@ -147,7 +137,7 @@ export default {
     // ...mapState({
     //   bannerList : state => state.home.bannerList
     // })
-    ...mapGetters(["bannerList"])
+    ...mapGetters(["bannerList"]),
   },
   // watch: {
   //   bannerList: {
@@ -181,9 +171,6 @@ export default {
   //     immediate:true //立即执行，在最近dom更新之前就会执行
   //   },
 
-
-
-    
   // }
 };
 </script>
@@ -259,7 +246,7 @@ export default {
           width: 25%;
 
           .list-item {
-            background-image: url(./images/icons.png);
+            background-image: url("../../../assets/images/icons.png");
             width: 61px;
             height: 40px;
             display: block;

@@ -60,7 +60,9 @@
             <span class="sum">{{ cart.skuNum * cart.skuPrice }}</span>
           </li>
           <li class="cart-list-con7">
-            <a href="#none" class="sindelet">删除</a>
+            <a href="javascript:;" class="sindelet" @click="deleteCart(cart)"
+              >删除</a
+            >
             <br />
             <a href="#none">移到收藏</a>
           </li>
@@ -73,7 +75,8 @@
         <span>全选</span>
       </div>
       <div class="option">
-        <a href="#none">删除选中的商品</a>
+        <!-- 删除选中的所有 -->
+        <a href="javascript:;" @click="deleteChecked">删除选中的商品</a>
         <a href="#none">移到我的关注</a>
         <a href="#none">清除下柜商品</a>
       </div>
@@ -88,7 +91,9 @@
           <i class="summoney">{{ allMoney }}</i>
         </div>
         <div class="sumbtn">
-          <a class="sum-btn" href="###" target="_blank">结算</a>
+          <!-- <a class="sum-btn" href="###" target="_blank">结算</a> -->
+          <!-- 对应交易信息页面跳转 -->
+          <router-link class="sum-btn" to="/trade">结算</router-link>
         </div>
       </div>
     </div>
@@ -126,6 +131,28 @@ export default {
           skuId: cart.skuId,
           isChecked: cart.isChecked === 1 ? 0 : 1,
         });
+        this.getShopCartList();
+      } catch (error) {
+        alert(error.message);
+      }
+    },
+
+    // 删除当前单个商品
+    async deleteCart(cart) {
+      try {
+        // 发送请求删除单个
+        await this.$store.dispatch("deleteShopCart", cart.skuId);
+        // 再次发送请求获取商品列表
+        this.getShopCartList();
+      } catch (error) {
+        alert(error.message);
+      }
+    },
+    // 删除选中的多个购物车商品
+    async deleteChecked() {
+      try {
+        // 事件触发调用请求发送，转接到store中调用
+        await this.$store.dispatch("deleteCheckedShopCart");
         this.getShopCartList();
       } catch (error) {
         alert(error.message);
@@ -175,7 +202,10 @@ export default {
         // 如果当前所有商品都被选中,才返回为true
         // every 全真则真
         // some  有真则真
-        return this.shopCartList.every((item, index) => item.isChecked === 1);
+        return (
+          this.shopCartList.every((item, index) => item.isChecked === 1) &&
+          this.shopCartList.length > 0
+        );
       },
       async set(val) {
         try {
