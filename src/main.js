@@ -5,8 +5,9 @@ import store from "@/store";
 import TypeNav from "@/components/TypeNav";
 import SliderLoop from "@/components/SliderLoop";
 import "@/mock/mockServer";
-import Pagination from "@/components/Pagination";
-import { MessageBox, Message } from "element-ui";
+import MyPagination from "@/components/Pagination";
+import { MessageBox, Message, Pagination } from "element-ui";
+Vue.use(Pagination);
 
 // 引入elementui单独对象
 // 消息盒子
@@ -27,7 +28,8 @@ Vue.config.productionTip = false;
 
 Vue.component("TypeNav", TypeNav);
 Vue.component("SliderLoop", SliderLoop);
-Vue.component("Pagination", Pagination);
+// 不使用注册
+Vue.component("Pagination", MyPagination);
 
 new Vue({
   beforeCreate() {
@@ -41,3 +43,15 @@ new Vue({
   router,
   store,
 });
+
+// 图片懒加载~~~~
+// 引入！
+import VueLazyLoad from "vue-lazyload";
+import loading from "@/assets/images/loading.gif";
+// 安装
+Vue.use(VueLazyLoad, {
+  loading,
+});
+
+// 引入前台表单验证
+import "@/validate";

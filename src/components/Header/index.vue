@@ -8,8 +8,8 @@
           <p>尚品汇欢迎您！</p>
           <!-- 登录状态 -->
           <p v-if="userInfo.name">
-            <!-- <router-link to="/login">登录</router-link> -->
-            <a href="javascript:;">{{ userInfo.name }}</a>
+            <router-link to="/center">{{ userInfo.name }}</router-link>
+            <!-- <a href="javascript:;">{{ userInfo.name }}</a> -->
             <!-- <router-link to="/register" class="register">退出登录</router-link> -->
             <a href="javascript:;" class="register" @click="logout">退出登录</a>
           </p>
@@ -24,8 +24,10 @@
           </p>
         </div>
         <div class="typeList">
-          <a href="###">我的订单</a>
-          <a href="###">我的购物车</a>
+          <!-- <a href="###">我的订单</a> -->
+          <router-link to="/center">我的订单</router-link>
+          <!-- <a href="###">我的购物车</a> -->
+          <router-link to="/shopcart">我的购物车</router-link>
           <a href="###">我的尚品汇</a>
           <a href="###">尚品汇会员</a>
           <a href="###">企业采购</a>
