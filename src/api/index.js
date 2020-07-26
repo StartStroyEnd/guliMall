@@ -62,4 +62,7 @@ export const reqOrderInfo = (orderId) =>
 // 支付状态请求，通过这个接口来判断用户是否已经付款
 export const reqPayStatus = (orderId) =>
   Ajax.get(`/payment/weixin/queryPayStatus/${orderId}`);
-  
+
+// 当前我的订单页面的订单详情页面数据请求
+export const reqMyOrder = (page, limit) =>
+  Ajax.get(`/order/auth/${page}/${limit}`);
